@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MehrShopping.Api", "MehrShopping.Api\MehrShopping.Api.csproj", "{A88740CA-E903-42A1-A381-EB5CE091EC62}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MehrShopping.Application", "MehrShopping.Application\MehrShopping.Application.csproj", "{22F2A2BA-FC66-48C3-BF14-B71577A63CCD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MehrShopping.Domain", "MehrShopping.Domain\MehrShopping.Domain.csproj", "{58A0BBD5-83D3-4E58-97A7-4214BC759AEA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MehrShopping.Infrastructure", "MehrShopping.Infrastructure\MehrShopping.Infrastructure.csproj", "{C6384C54-A068-498E-8D1A-22A2F8A19023}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MehrShopping.Api", "MehrShopping.Api\MehrShopping.Api.csproj", "{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +21,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Debug|x64.Build.0 = Debug|Any CPU
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Debug|x86.Build.0 = Debug|Any CPU
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Release|x64.ActiveCfg = Release|Any CPU
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Release|x64.Build.0 = Release|Any CPU
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Release|x86.ActiveCfg = Release|Any CPU
-		{A88740CA-E903-42A1-A381-EB5CE091EC62}.Release|x86.Build.0 = Release|Any CPU
 		{22F2A2BA-FC66-48C3-BF14-B71577A63CCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{22F2A2BA-FC66-48C3-BF14-B71577A63CCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22F2A2BA-FC66-48C3-BF14-B71577A63CCD}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -69,6 +57,18 @@ Global
 		{C6384C54-A068-498E-8D1A-22A2F8A19023}.Release|x64.Build.0 = Release|Any CPU
 		{C6384C54-A068-498E-8D1A-22A2F8A19023}.Release|x86.ActiveCfg = Release|Any CPU
 		{C6384C54-A068-498E-8D1A-22A2F8A19023}.Release|x86.Build.0 = Release|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Debug|x64.Build.0 = Debug|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Debug|x86.Build.0 = Debug|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Release|x64.ActiveCfg = Release|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Release|x64.Build.0 = Release|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Release|x86.ActiveCfg = Release|Any CPU
+		{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

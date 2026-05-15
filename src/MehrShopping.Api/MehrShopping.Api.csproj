@@ -1,10 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MehrShopping.Application\MehrShopping.Application.csproj" />
+    <ProjectReference Include="..\MehrShopping.Infrastructure\MehrShopping.Infrastructure.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />

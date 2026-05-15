@@ -44,6 +44,15 @@ namespace MehrShopping.Domain.Entities
 
         public int Id { get; private set; }
 
+        private readonly List<Invoice> _invoices = new List<Invoice>();
+        public ICollection<Invoice> Invoices
+        {
+            get
+            {
+                return _invoices;
+            }
+        }
+
         private Customer() { }
 
         #endregion

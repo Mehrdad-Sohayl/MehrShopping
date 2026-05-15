@@ -6,11 +6,9 @@ namespace MehrShopping.Domain.Entities
 {
     public class Product
     {
-        public int Id { get; private set; }
         public Name Name { get; private set; }
         public Quantity StockQuantity { get; private set; }
 
-        private Product() { }
 
         private Product(Name name, Quantity stockQuantity)
         {
@@ -36,5 +34,22 @@ namespace MehrShopping.Domain.Entities
             if (StockQuantity.Value > 0)
                 throw new DomainException(new DomainError(DomainErrorCodes.ItemsRemainInStock, nameof(DeleteProduct)));
         }
+
+        #region EF
+
+        public int Id { get; private set; }
+        private Product() { }
+
+        private List<InvoiceItem> _items = new List<InvoiceItem>();
+
+        public ICollection<InvoiceItem> Items
+        {
+            get
+            {
+                return _items;
+            }
+        }
+
+        #endregion
     }
 }

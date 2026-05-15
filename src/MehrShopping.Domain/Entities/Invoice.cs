@@ -54,6 +54,7 @@ namespace MehrShopping.Domain.Entities
             _items = new List<InvoiceItem>();
         }
 
+        public int CustomerId { get; private set; }
 
         #endregion
     }
