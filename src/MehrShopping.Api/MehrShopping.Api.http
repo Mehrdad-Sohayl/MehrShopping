@@ -1,0 +1,6 @@
+@MehrShopping.Api_HostAddress = http://localhost:5143
+
+GET {{MehrShopping.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
