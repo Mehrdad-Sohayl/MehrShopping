@@ -1,5 +1,7 @@
 ﻿using MehrShopping.Application.Interfaces;
 using MehrShopping.Infrastructure.Data;
+using MehrShopping.Infrastructure.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace MehrShopping.Infrastructure.Repositories
 {
@@ -14,7 +16,14 @@ namespace MehrShopping.Infrastructure.Repositories
 
         public async Task<int> SaveChangesAsync()
         {
-            return await _context.SaveChangesAsync();
+            try
+            {
+                return await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                throw new ConcurrencyException(ex.Message, ex);
+            }
         }
     }
 }

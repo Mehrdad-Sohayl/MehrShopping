@@ -1,4 +1,6 @@
+using MehrShopping.Application.Interfaces;
 using MehrShopping.Infrastructure.Data;
+using MehrShopping.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -16,6 +18,8 @@ namespace MehrShopping.Api
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddControllers();
 
