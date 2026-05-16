@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MehrShopping.Application\MehrShopping.Application.csproj" />
     <ProjectReference Include="..\MehrShopping.Domain\MehrShopping.Domain.csproj" />
   </ItemGroup>
 
