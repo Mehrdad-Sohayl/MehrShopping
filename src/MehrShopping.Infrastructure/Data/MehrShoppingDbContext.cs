@@ -92,6 +92,8 @@ namespace MehrShopping.Infrastructure.Data
                 e.HasOne(ii => ii.Invoice)
                 .WithMany(i => i.Items)
                 .HasForeignKey(ii => ii.InvoiceId);
+
+                e.HasIndex(c => new { c.ProductId, c.InvoiceId });
             });
         }
     }

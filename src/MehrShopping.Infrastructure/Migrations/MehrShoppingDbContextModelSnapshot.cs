@@ -70,7 +70,7 @@ namespace MehrShopping.Infrastructure.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId", "InvoiceId");
 
                     b.ToTable("InvoiceItems");
                 });
