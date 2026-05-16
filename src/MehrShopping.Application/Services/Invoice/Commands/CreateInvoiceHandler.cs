@@ -1,5 +1,6 @@
 ﻿using MehrShopping.Application.Common;
 using MehrShopping.Application.Interfaces;
+using MehrShopping.Domain.Entities;
 using MehrShopping.Domain.Interfaces.Repositories;
 
 namespace MehrShopping.Application.Services.Invoice.Commands
@@ -43,9 +44,12 @@ namespace MehrShopping.Application.Services.Invoice.Commands
                 if (product.StockQuantity.Value <= 0)
                     return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.ProductOutOfStock, nameof(product)));
 
-                product.DecreaseStock(item.Quantity.Value);
+                product.DecreaseStock(item.Quantity);
                 _productRepository.Update(product);
-                invoice.AddItem(item);
+
+                var invoiceItem = InvoiceItem.Create(product, item.Quantity);
+
+                invoice.AddItem(invoiceItem);
             }
 
             if (!invoice.Items.Any())
