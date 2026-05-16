@@ -25,10 +25,6 @@ namespace MehrShopping.Infrastructure.Data
             {
                 e.HasKey(c => c.Id);
 
-                //e.Property(c => c.FirstName).IsRequired();
-                //e.Property(c => c.LastName).IsRequired();
-                //e.Property(c => c.NationalCode).IsRequired();
-
                 e.OwnsOne<NationalCode>(c => c.NationalCode, nav =>
                 {
                     nav.Property(n => n.Value).HasColumnName(nameof(Customer.NationalCode));
@@ -51,9 +47,6 @@ namespace MehrShopping.Infrastructure.Data
             modelBuilder.Entity<Product>(e =>
             {
                 e.HasKey(p => p.Id);
-
-                //e.Property(p => p.Name).IsRequired();
-                //e.Property(p => p.StockQuantity).IsRequired();
 
                 e.OwnsOne<Name>(p => p.Name, nav =>
                 {
