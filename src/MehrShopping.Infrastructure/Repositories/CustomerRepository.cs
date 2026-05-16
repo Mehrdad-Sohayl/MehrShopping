@@ -1,38 +1,47 @@
 ﻿using MehrShopping.Domain.Entities;
 using MehrShopping.Domain.Interfaces.Repositories;
+using MehrShopping.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MehrShopping.Infrastructure.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
-        public Task AddAsync(Customer customer)
+        private readonly MehrShoppingDbContext _dbContext;
+
+        public CustomerRepository(MehrShoppingDbContext dbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
         }
 
-        public Task DeleteAsync(Customer customer)
+        public async Task AddAsync(Customer customer)
         {
-            throw new NotImplementedException();
+            await _dbContext.Customers.AddAsync(customer);
         }
 
-        public Task DeleteByIdAsync(int id)
+        public void Delete(Customer customer)
         {
-            throw new NotImplementedException();
+            _dbContext.Customers.Remove(customer);
         }
 
-        public Task<List<Customer>> GetAllAsync()
+        public async Task<Customer?> FindByNationalCodeAsync(string nationalCode)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Customers.FirstOrDefaultAsync(c => c.NationalCode.Value == nationalCode);
         }
 
-        public Task<Customer?> GetByIdAsync(int id)
+        public async Task<List<Customer>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Customers.ToListAsync();
         }
 
-        public Task UpdateAsync(Customer customer)
+        public async Task<Customer?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Customers.FindAsync(id);
+        }
+
+        public void Update(Customer customer)
+        {
+            _dbContext.Customers.Update(customer);
         }
     }
 }

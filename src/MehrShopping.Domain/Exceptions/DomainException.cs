@@ -1,6 +1,4 @@
-﻿using MehrShopping.Domain.Errors;
-
-namespace MehrShopping.Domain.Exceptions
+﻿namespace MehrShopping.Domain.Exceptions
 {
     public class DomainException : Exception
     {
