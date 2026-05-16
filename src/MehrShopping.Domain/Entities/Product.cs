@@ -35,6 +35,12 @@ namespace MehrShopping.Domain.Entities
                 throw new DomainException(new DomainError(DomainErrorCodes.ItemsRemainInStock, nameof(DeleteProduct)));
         }
 
+        public void DecreaseStock(int quantity)
+        {
+            if (StockQuantity.Value < quantity)
+                throw new DomainException(new DomainError(DomainErrorCodes.ProductOutOfStock, nameof(DecreaseStock)));
+        }
+
         #region EF
 
         public int Id { get; private set; }

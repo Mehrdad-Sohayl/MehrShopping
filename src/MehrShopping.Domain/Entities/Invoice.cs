@@ -18,7 +18,6 @@ namespace MehrShopping.Domain.Entities
             }
         }
 
-
         public Invoice(Customer customer)
         {
             if (customer == null)
@@ -31,6 +30,10 @@ namespace MehrShopping.Domain.Entities
             Customer = customer;
         }
 
+        public static Invoice Create(Customer customer)
+        {
+            return new Invoice(customer);
+        }
 
         public void AddItem(InvoiceItem item)
         {
