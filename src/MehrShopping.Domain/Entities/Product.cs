@@ -1,6 +1,7 @@
 ﻿using MehrShopping.Domain.Errors;
 using MehrShopping.Domain.Exceptions;
 using MehrShopping.Domain.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 
 namespace MehrShopping.Domain.Entities
 {
@@ -55,6 +56,9 @@ namespace MehrShopping.Domain.Entities
                 return _items;
             }
         }
+
+        [Timestamp]
+        public byte[] RowVersion { get; private set; }
 
         #endregion
     }

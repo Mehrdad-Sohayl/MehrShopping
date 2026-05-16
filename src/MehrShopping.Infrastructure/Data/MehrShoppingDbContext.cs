@@ -57,6 +57,9 @@ namespace MehrShopping.Infrastructure.Data
                 {
                     nav.Property(q => q.Value).HasColumnName(nameof(Product.StockQuantity));
                 });
+
+                e.Property(p => p.RowVersion)
+                .IsRowVersion();
             });
 
             modelBuilder.Entity<Invoice>(e =>
