@@ -1,0 +1,7 @@
+﻿namespace MehrShopping.Application.Services.Products.Commands
+{
+    public class DeleteProductCommand
+    {
+        public int Id { get; init; }
+    }
+}
