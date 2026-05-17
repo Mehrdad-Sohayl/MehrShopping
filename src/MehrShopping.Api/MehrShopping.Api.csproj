@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MehrShopping.Application\MehrShopping.Application.csproj" />
     <ProjectReference Include="..\MehrShopping.Infrastructure\MehrShopping.Infrastructure.csproj" />
   </ItemGroup>

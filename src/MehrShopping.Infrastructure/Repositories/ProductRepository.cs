@@ -14,19 +14,14 @@ namespace MehrShopping.Infrastructure.Repositories
             _context = context;
         }
 
-        public Task AddAsync(Product product)
+        public async Task AddAsync(Product product)
         {
-            throw new NotImplementedException();
+            await _context.Products.AddAsync(product);
         }
 
         public void Delete(Product product)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteByIdAsync(int id)
-        {
-            throw new NotImplementedException();
+            _context.Products.Remove(product);
         }
 
         public Task<List<Product>> GetAllAsync()
@@ -34,9 +29,9 @@ namespace MehrShopping.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Product?> GetByIdAsync(int id)
+        public async Task<Product?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Products.FindAsync(id);
         }
 
         public async Task<Product?> GetByNameAsync(string name)
@@ -46,7 +41,7 @@ namespace MehrShopping.Infrastructure.Repositories
 
         public void Update(Product product)
         {
-            throw new NotImplementedException();
+            _context.Products.Update(product);
         }
     }
 }

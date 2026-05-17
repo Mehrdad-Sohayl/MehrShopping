@@ -40,6 +40,16 @@ namespace MehrShopping.Domain.Entities
         {
             if (StockQuantity.Value < quantity)
                 throw new DomainException(new DomainError(DomainErrorCodes.ProductOutOfStock, nameof(DecreaseStock)));
+
+            var errors = new List<DomainError>();
+
+            int _quantity = StockQuantity.Value - quantity;
+
+            var newQuantity = Quantity.Create(_quantity, errors);
+            if (errors.Any())
+                throw new DomainException(errors);
+
+            StockQuantity = newQuantity;
         }
 
         #region EF
