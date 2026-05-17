@@ -4,13 +4,13 @@ using MehrShopping.Application.Interfaces;
 
 namespace MehrShopping.Application.Services.Customer.Commands.RegisterCustomer
 {
-    public class RegisterCustomerHandler
+    public class UpdateCustomerHandler
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IPersonalInfoClient _personalInfoClient;
         private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterCustomerHandler(
+        public UpdateCustomerHandler(
             ICustomerRepository customerRepository,
             IPersonalInfoClient personalInfoClient,
             IUnitOfWork unitOfWork)
@@ -20,22 +20,23 @@ namespace MehrShopping.Application.Services.Customer.Commands.RegisterCustomer
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<MehrShopping.Domain.Entities.Customer>> Handle(RegisterCustomerCommand command)
+        public async Task<Result<Domain.Entities.Customer>> Handle(RegisterCustomerCommand command)
         {
             var customer = await _customerRepository.FindByNationalCodeAsync(command.NationalCode);
-            if (customer != null)
+            if (customer == null)
                 return Result<Domain.Entities.Customer>.Failure(new ApplicationError(ApplicationErrorCodes.CustomerAlreadyExists, nameof(customer)));
 
             var personalInfo = await _personalInfoClient.GetAsync(command.NationalCode);
+
             if (personalInfo == null)
                 return Result<Domain.Entities.Customer>.Failure(new ApplicationError(ApplicationErrorCodes.PersonalInfoNotFound, nameof(personalInfo)));
 
-            var newCustomer = Domain.Entities.Customer.Create(personalInfo.FirstName, personalInfo.LastName, personalInfo.NationalCode);
+            customer.Update(personalInfo.FirstName, personalInfo.LastName);
 
-            await _customerRepository.AddAsync(newCustomer);
+            _customerRepository.Update(customer);
             await _unitOfWork.SaveChangesAsync();
 
-            return Result<Domain.Entities.Customer>.Success(newCustomer);
+            return Result<Domain.Entities.Customer>.Success(customer);
         }
     }
 }

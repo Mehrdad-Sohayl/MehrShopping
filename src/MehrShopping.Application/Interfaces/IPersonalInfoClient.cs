@@ -1,8 +1,8 @@
 ﻿namespace MehrShopping.Application.Interfaces
 {
-    public interface IPersonalInfoService
+    public interface IPersonalInfoClient
     {
-        Task<PersonalInfoDto> GetAsync(string nationalCode);
+        Task<PersonalInfoDto?> GetAsync(string nationalCode);
     }
 
     public record PersonalInfoDto(string FirstName, string LastName, string NationalCode);

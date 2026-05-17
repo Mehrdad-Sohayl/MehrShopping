@@ -11,6 +11,14 @@ namespace MehrShopping.Api.Controllers
         private readonly RegisterCustomerHandler _registerCustomerHandler;
         private readonly UpdateCustomerHandler _updateCustomerHandler;
 
+        public CustomerController(
+            RegisterCustomerHandler registerCustomerHandler,
+            UpdateCustomerHandler updateCustomerHandler)
+        {
+            _registerCustomerHandler = registerCustomerHandler;
+            _updateCustomerHandler = updateCustomerHandler;
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterCustomerRequest request)
         {

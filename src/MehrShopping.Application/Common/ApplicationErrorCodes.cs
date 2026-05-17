@@ -4,6 +4,7 @@
     {
         public const string CustomerAlreadyExists = "Customer_Already_Exists";
         public const string CustomerNotFound = "Customer_Not_Found";
+        public const string PersonalInfoNotFound = "Personal_Info_Not_Found";
         public const string ProductAlreadyExists = "Product_Already_Exists";
         public const string ProductNotFound = "Product_Not_Found";
         public const string ProductOutOfStock = "Product_Out_Of_Stock";
