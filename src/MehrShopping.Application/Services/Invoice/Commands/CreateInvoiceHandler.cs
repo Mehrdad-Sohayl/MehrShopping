@@ -41,7 +41,7 @@ namespace MehrShopping.Application.Services.Invoice.Commands
                 if (product == null)
                     return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.ProductNotFound, nameof(product)));
 
-                if (product.StockQuantity.Value <= 0)
+                if (product.StockQuantity.Value <= 0 || product.StockQuantity.Value < item.Quantity)
                     return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.ProductOutOfStock, nameof(product)));
 
                 product.DecreaseStock(item.Quantity);

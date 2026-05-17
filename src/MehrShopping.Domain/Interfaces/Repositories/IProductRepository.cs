@@ -7,7 +7,6 @@ namespace MehrShopping.Domain.Interfaces.Repositories
         Task AddAsync(Product product);
         void Update(Product product);
         void Delete(Product product);
-        Task DeleteByIdAsync(int id);
         Task<Product?> GetByIdAsync(int id);
         Task<List<Product>> GetAllAsync();
         Task<Product?> GetByNameAsync(string name);
