@@ -1,6 +1,7 @@
 using MehrShopping.Application.Interfaces;
 using MehrShopping.Application.Services.Customer.Commands.RegisterCustomer;
 using MehrShopping.Application.Services.Invoice.Commands;
+using MehrShopping.Application.Services.Invoice.Queries;
 using MehrShopping.Application.Services.Products.Commands;
 using MehrShopping.Domain.Interfaces.Repositories;
 using MehrShopping.Infrastructure.Clients;
@@ -37,10 +38,12 @@ namespace MehrShopping.Api
             builder.Services.AddScoped<RegisterProductHandler>();
             builder.Services.AddScoped<DeleteProductHandler>();
             builder.Services.AddScoped<CreateInvoiceHandler>();
+            builder.Services.AddScoped<InvoiceListQueryHandler>();
 
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            builder.Services.AddScoped<IInvoiceReadRepository, InvoiceRepository>();
 
             builder.Services.AddControllers();
 

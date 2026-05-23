@@ -34,14 +34,14 @@ namespace MehrShopping.Infrastructure.Data
                 e.OwnsOne<Name>(c => c.FirstName, nav =>
                 {
                     nav.Property(n => n.Value).HasColumnName(nameof(Customer.FirstName));
+                    nav.HasIndex(c => c.Value);
                 });
 
                 e.OwnsOne<Name>(c => c.LastName, nav =>
                 {
                     nav.Property(n => n.Value).HasColumnName(nameof(Customer.LastName));
+                    nav.HasIndex(c => c.Value);
                 });
-
-
             });
 
             modelBuilder.Entity<Product>(e =>
@@ -51,6 +51,7 @@ namespace MehrShopping.Infrastructure.Data
                 e.OwnsOne<Name>(p => p.Name, nav =>
                 {
                     nav.Property(n => n.Value).HasColumnName(nameof(Product.Name));
+                    nav.HasIndex(c => c.Value);
                 });
 
                 e.OwnsOne<Quantity>(p => p.StockQuantity, nav =>
@@ -93,7 +94,7 @@ namespace MehrShopping.Infrastructure.Data
                 .WithMany(i => i.Items)
                 .HasForeignKey(ii => ii.InvoiceId);
 
-                e.HasIndex(c => new { c.ProductId, c.InvoiceId });
+                e.HasIndex(c => new { c.ProductId, c.InvoiceId }).IsUnique();
             });
         }
     }

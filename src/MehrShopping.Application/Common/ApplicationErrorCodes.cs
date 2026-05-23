@@ -9,6 +9,7 @@
         public const string ProductNotFound = "Product_Not_Found";
         public const string ProductOutOfStock = "Product_Out_Of_Stock";
         public const string EmptyInvoiceItem = "Empty_Invoice_Item";
+        public const string RequestValidation = "Request_Validation";
 
     }
 }

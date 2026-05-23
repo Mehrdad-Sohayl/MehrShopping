@@ -70,7 +70,8 @@ namespace MehrShopping.Infrastructure.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("ProductId", "InvoiceId");
+                    b.HasIndex("ProductId", "InvoiceId")
+                        .IsUnique();
 
                     b.ToTable("InvoiceItems");
                 });
@@ -103,10 +104,12 @@ namespace MehrShopping.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)")
+                                .HasColumnType("nvarchar(450)")
                                 .HasColumnName("FirstName");
 
                             b1.HasKey("CustomerId");
+
+                            b1.HasIndex("Value");
 
                             b1.ToTable("Customers");
 
@@ -121,10 +124,12 @@ namespace MehrShopping.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)")
+                                .HasColumnType("nvarchar(450)")
                                 .HasColumnName("LastName");
 
                             b1.HasKey("CustomerId");
+
+                            b1.HasIndex("Value");
 
                             b1.ToTable("Customers");
 
@@ -222,10 +227,12 @@ namespace MehrShopping.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)")
+                                .HasColumnType("nvarchar(450)")
                                 .HasColumnName("Name");
 
                             b1.HasKey("ProductId");
+
+                            b1.HasIndex("Value");
 
                             b1.ToTable("Products");
 
