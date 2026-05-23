@@ -1,12 +1,22 @@
-﻿using System.Xml;
-
-namespace MehrShopping.Application.Common
+﻿namespace MehrShopping.Application.Common
 {
     public class Result<T>
     {
         public T Value { get; private set; }
         public bool IsSuccess { get; private set; }
         public IReadOnlyCollection<ApplicationError> Errors { get; set; } = new List<ApplicationError>();
+
+        protected Result(T value, bool isSuccess, IReadOnlyCollection<ApplicationError> errors)
+        {
+            Value = value;
+            IsSuccess = isSuccess;
+            Errors = errors;
+        }
+
+        private Result()
+        {
+
+        }
 
         public static Result<T> Success(T value)
         {

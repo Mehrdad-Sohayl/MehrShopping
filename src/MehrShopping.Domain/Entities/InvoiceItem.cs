@@ -7,7 +7,6 @@ namespace MehrShopping.Domain.Entities
     {
         public Product Product { get; private set; }
         public Quantity Quantity { get; private set; }
-        public Invoice Invoice { get; private set; }
 
 
         private InvoiceItem(Product product, Quantity quantity)
@@ -33,6 +32,7 @@ namespace MehrShopping.Domain.Entities
         public int Id { get; private set; }
         public int ProductId { get; private set; }
         public int InvoiceId { get; private set; }
+        public Invoice Invoice { get; private set; }
 
         #endregion
     }
