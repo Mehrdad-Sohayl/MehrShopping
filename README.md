@@ -411,7 +411,7 @@ Typical test coverage includes:
 
 | Technology            | Purpose                        |
 | --------------------- | ------------------------------ |
-| .NET 6/7              | Application Platform           |
+| .NET 8                | Application Platform           |
 | ASP.NET Core MVC      | REST API                       |
 | Entity Framework Core | Data Access                    |
 | SQL Server            | Database                       |
