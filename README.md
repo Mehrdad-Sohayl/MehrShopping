@@ -235,7 +235,7 @@ provides interactive API documentation.
 
 ---
 
-# Secuence Diagram For Register Customer
+# 👤 Customer Registration Workflow (Detailed Sequence)
 
 ```mermaid
 sequenceDiagram
@@ -287,7 +287,7 @@ sequenceDiagram
     end
 ```
 
-# Secuence Diagram For Create Invoice
+# ⚙️ Invoice Creation Workflow (Detailed Sequence)
 
 ```mermaid
 sequenceDiagram
