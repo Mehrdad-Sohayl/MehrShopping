@@ -289,6 +289,7 @@ sequenceDiagram
 
 # Secuence Diagram For Create Invoice
 
+```mermaid
 sequenceDiagram
     actor Client
     participant InvoiceController
@@ -336,6 +337,7 @@ sequenceDiagram
         CreateInvoiceCommandHandler-->>InvoiceController: Success(invoice)
         InvoiceController-->>Client: 200 OK
     end
+```
 
 # ⚙️ Configuration
 
