@@ -287,6 +287,55 @@ sequenceDiagram
     end
 ```
 
+# Secuence Diagram For Create Invoice
+
+sequenceDiagram
+    actor Client
+    participant InvoiceController
+    participant CreateInvoiceCommandHandler
+    participant CustomerRepository
+    participant ProductRepository
+    participant InvoiceRepository
+    participant UnitOfWork
+
+    Client->>InvoiceController: POST /api/invoice
+
+    InvoiceController->>CreateInvoiceCommandHandler: Handle(command)
+
+    %% Validate customer
+    CreateInvoiceCommandHandler->>CustomerRepository: GetByIdAsync(customerId)
+    CustomerRepository-->>CreateInvoiceCommandHandler: customer
+
+    alt customer not found
+        CreateInvoiceCommandHandler-->>InvoiceController: Failure(CustomerNotFound)
+        InvoiceController-->>Client: 400 Bad Request
+    else customer exists
+
+        %% Validate products
+        loop each item
+            CreateInvoiceCommandHandler->>ProductRepository: GetByIdAsync(productId)
+            ProductRepository-->>CreateInvoiceCommandHandler: product
+
+            alt product not found
+                CreateInvoiceCommandHandler-->>InvoiceController: Failure(ProductNotFound)
+                InvoiceController-->>Client: 400 Bad Request
+            end
+        end
+
+        %% Domain operation
+        CreateInvoiceCommandHandler->>CreateInvoiceCommandHandler: Create Invoice Aggregate
+
+        loop each item
+            CreateInvoiceCommandHandler->>ProductRepository: DecreaseStock(item.quantity)
+        end
+
+        %% Persistence (single transaction)
+        CreateInvoiceCommandHandler->>InvoiceRepository: AddAsync(invoice)
+        CreateInvoiceCommandHandler->>UnitOfWork: SaveChangesAsync()
+
+        CreateInvoiceCommandHandler-->>InvoiceController: Success(invoice)
+        InvoiceController-->>Client: 200 OK
+    end
 
 # ⚙️ Configuration
 
