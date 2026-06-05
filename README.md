@@ -235,6 +235,59 @@ provides interactive API documentation.
 
 ---
 
+# Secuence Diagram For Register Customer
+
+```mermaid
+sequenceDiagram
+    actor Client
+    participant CustomerController
+    participant RegisterCustomerCommandHandler
+    participant ICustomerRepository
+    participant IPersonalInfoClient
+    participant IUnitOfWork
+    participant Customer as Domain.Entities.Customer
+
+    Client->>CustomerController: RegisterCustomerRequest
+    CustomerController->>CustomerController: Create RegisterCustomerCommand
+    CustomerController->>RegisterCustomerCommandHandler: Handle(command)
+
+    RegisterCustomerCommandHandler->>ICustomerRepository: FindByNationalCodeAsync(nationalCode)
+    ICustomerRepository-->>RegisterCustomerCommandHandler: Existing customer / null
+
+    alt Customer already exists
+        RegisterCustomerCommandHandler-->>CustomerController: Failure(CustomerAlreadyExists)
+        CustomerController-->>Client: HTTP 400 Bad Request
+    else Customer does not exist
+        RegisterCustomerCommandHandler->>IPersonalInfoClient: GetAsync(nationalCode)
+        IPersonalInfoClient-->>RegisterCustomerCommandHandler: PersonalInfo / null
+
+        alt Personal info not found
+            RegisterCustomerCommandHandler-->>CustomerController: Failure(PersonalInfoNotFound)
+            CustomerController-->>Client: HTTP 400 Bad Request
+        else Personal info found
+            RegisterCustomerCommandHandler->>Customer: Create Customer(firstName, lastName, nationalCode)
+            Customer-->>RegisterCustomerCommandHandler: New Customer
+
+            RegisterCustomerCommandHandler->>ICustomerRepository: AddAsync(customer)
+            ICustomerRepository-->>RegisterCustomerCommandHandler: Customer added
+
+            RegisterCustomerCommandHandler->>IUnitOfWork: SaveChangesAsync()
+            IUnitOfWork-->>RegisterCustomerCommandHandler: Changes saved
+
+            RegisterCustomerCommandHandler-->>CustomerController: Success(customer)
+
+            alt result.IsSuccess == true
+                CustomerController-->>Client: HTTP 200 OK + Result
+            else Result contains errors
+                CustomerController-->>Client: HTTP 400 Bad Request + First Error
+            else Generic failure
+                CustomerController-->>Client: HTTP 400 Bad Request
+            end
+        end
+    end
+```
+
+
 # ⚙️ Configuration
 
 Configuration is managed through `appsettings.json`.
