@@ -8,23 +8,23 @@ namespace MehrShopping.Api.Controllers
     [Route("api/[Controller]")]
     public class CustomerController : ControllerBase
     {
-        private readonly RegisterCustomerHandler _registerCustomerHandler;
-        private readonly UpdateCustomerHandler _updateCustomerHandler;
+        private readonly RegisterCustomerCommandHandler _registerCustomerCommandHandler;
+        private readonly UpdateCustomerCommandHandler _updateCustomerCommandHandler;
 
         public CustomerController(
-            RegisterCustomerHandler registerCustomerHandler,
-            UpdateCustomerHandler updateCustomerHandler)
+            RegisterCustomerCommandHandler registerCustomerCommandHandler,
+            UpdateCustomerCommandHandler updateCustomerCommandHandler)
         {
-            _registerCustomerHandler = registerCustomerHandler;
-            _updateCustomerHandler = updateCustomerHandler;
+            _registerCustomerCommandHandler = registerCustomerCommandHandler;
+            _updateCustomerCommandHandler = updateCustomerCommandHandler;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterCustomerRequest request)
+        public async Task<IActionResult> Register(RegisterCustomerRequest request, CancellationToken cancellationToken)
         {
             var command = new RegisterCustomerCommand(request.NationalCode);
 
-            var result = await _registerCustomerHandler.Handle(command);
+            var result = await _registerCustomerCommandHandler.Handle(command, cancellationToken);
 
             if (result.IsSuccess)
                 return Ok(result);
@@ -36,11 +36,11 @@ namespace MehrShopping.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateCustomerRequest request)
+        public async Task<IActionResult> Update(UpdateCustomerRequest request, CancellationToken cancellationToken)
         {
             var command = new RegisterCustomerCommand(request.NationalCode);
 
-            var result = await _updateCustomerHandler.Handle(command);
+            var result = await _updateCustomerCommandHandler.Handle(command, cancellationToken);
 
             if (result.IsSuccess)
                 return Ok(result);
