@@ -33,11 +33,11 @@ namespace MehrShopping.Api
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            builder.Services.AddScoped<RegisterCustomerHandler>();
-            builder.Services.AddScoped<UpdateCustomerHandler>();
-            builder.Services.AddScoped<RegisterProductHandler>();
-            builder.Services.AddScoped<DeleteProductHandler>();
-            builder.Services.AddScoped<CreateInvoiceHandler>();
+            builder.Services.AddScoped<RegisterCustomerCommandHandler>();
+            builder.Services.AddScoped<UpdateCustomerCommandHandler>();
+            builder.Services.AddScoped<RegisterProductCommandHandler>();
+            builder.Services.AddScoped<DeleteProductCommandHandler>();
+            builder.Services.AddScoped<CreateInvoiceCommandHandler>();
             builder.Services.AddScoped<InvoiceListQueryHandler>();
 
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
