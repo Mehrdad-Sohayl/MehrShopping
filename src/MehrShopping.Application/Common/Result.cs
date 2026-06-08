@@ -35,6 +35,15 @@
                 Errors = new List<ApplicationError>() { error }
             };
         }
+
+        public static Result<T> Failure(List<ApplicationError> errors)
+        {
+            return new Result<T>
+            {
+                IsSuccess = false,
+                Errors = errors
+            };
+        }
     }
 
     public record ApplicationError(string Code, string Message);
