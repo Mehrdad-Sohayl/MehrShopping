@@ -34,6 +34,13 @@ namespace MehrShopping.Infrastructure.Repositories
             return await _context.Products.FindAsync(id);
         }
 
+        public async Task<List<Product>> GetByIdsAsync(IReadOnlyCollection<int> ids)
+        {
+            return await _context.Products
+                .Where(p => ids.Contains(p.Id))
+                .ToListAsync();
+        }
+
         public async Task<Product?> GetByNameAsync(string name)
         {
             return await _context.Products.FirstOrDefaultAsync(p => p.Name.Value == name);
