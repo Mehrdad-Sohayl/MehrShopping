@@ -4,13 +4,13 @@ using MehrShopping.Application.Interfaces;
 
 namespace MehrShopping.Application.Services.Customer.Commands.RegisterCustomer
 {
-    public class UpdateCustomerHandler
+    public class RegisterCustomerCommandHandler
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IPersonalInfoClient _personalInfoClient;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateCustomerHandler(
+        public RegisterCustomerCommandHandler(
             ICustomerRepository customerRepository,
             IPersonalInfoClient personalInfoClient,
             IUnitOfWork unitOfWork)
@@ -20,23 +20,23 @@ namespace MehrShopping.Application.Services.Customer.Commands.RegisterCustomer
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<Domain.Entities.Customer>> Handle(RegisterCustomerCommand command)
+        public async Task<Result<Domain.Entities.Customer>> Handle(RegisterCustomerCommand command, CancellationToken cancellationToken)
         {
             var customer = await _customerRepository.FindByNationalCodeAsync(command.NationalCode);
-            if (customer == null)
+            if (customer != null)
                 return Result<Domain.Entities.Customer>.Failure(new ApplicationError(ApplicationErrorCodes.CustomerAlreadyExists, nameof(customer)));
 
-            var personalInfo = await _personalInfoClient.GetAsync(command.NationalCode);
-
+            var personalInfo = await _personalInfoClient.GetAsync(command.NationalCode, cancellationToken);
             if (personalInfo == null)
                 return Result<Domain.Entities.Customer>.Failure(new ApplicationError(ApplicationErrorCodes.PersonalInfoNotFound, nameof(personalInfo)));
 
-            customer.Update(personalInfo.FirstName, personalInfo.LastName);
+            var newCustomer = Domain.Entities.Customer.Create(personalInfo.FirstName, personalInfo.LastName, personalInfo.NationalCode);
 
-            _customerRepository.Update(customer);
+            // TODO: Race condition
+            await _customerRepository.AddAsync(newCustomer);
             await _unitOfWork.SaveChangesAsync();
 
-            return Result<Domain.Entities.Customer>.Success(customer);
+            return Result<Domain.Entities.Customer>.Success(newCustomer);
         }
     }
 }
