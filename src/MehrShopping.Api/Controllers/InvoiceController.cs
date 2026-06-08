@@ -1,7 +1,5 @@
 ﻿using MehrShopping.Api.Requests;
-using MehrShopping.Application.Services.Customer.Commands.RegisterCustomer;
 using MehrShopping.Application.Services.Invoice.Commands;
-using MehrShopping.Application.Services.Products.Commands;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MehrShopping.Api.Controllers

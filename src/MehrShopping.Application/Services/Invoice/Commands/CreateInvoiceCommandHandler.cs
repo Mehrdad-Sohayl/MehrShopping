@@ -26,6 +26,8 @@ namespace MehrShopping.Application.Services.Invoice.Commands
 
         public async Task<Result<Domain.Entities.Invoice>> Handle(CreateInvoiceCommand command)
         {
+            var errors = new List<ApplicationError>();
+
             var customer = await _customerRepository.GetByIdAsync(command.CustomerId);
             if (customer == null)
                 return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.CustomerNotFound, nameof(customer)));
@@ -33,33 +35,50 @@ namespace MehrShopping.Application.Services.Invoice.Commands
             if (!command.Items.Any())
                 return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.EmptyInvoiceItem, nameof(command.Items)));
 
-            var invoice = Domain.Entities.Invoice.Create(customer);
 
-            foreach (var item in command.Items)
+            var groupedProducts = command.Items
+                .GroupBy(x => x.ProductId)
+                .Select(x => new
+                {
+                    ProductId = x.Key,
+                    Quantity = x.Sum(q => q.Quantity)
+                }).ToList();
+
+            var products = await _productRepository.GetByIdsAsync(groupedProducts.Select(i => i.ProductId).ToList());
+
+            var productsDictionary = products.ToDictionary(d => d.Id);
+
+            foreach (var item in groupedProducts)
             {
-                var product = await _productRepository.GetByIdAsync(item.ProductId);
-                if (product == null)
-                    return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.ProductNotFound, nameof(product)));
+                if (!productsDictionary.TryGetValue(item.ProductId, out var product))
+                {
+                    errors.Add(new ApplicationError(ApplicationErrorCodes.ProductNotFound, item.ProductId.ToString()));
+                    continue;
+                }
 
-                if (product.StockQuantity.Value <= 0 || product.StockQuantity.Value < item.Quantity)
-                    return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.ProductOutOfStock, nameof(product)));
-
-                product.DecreaseStock(item.Quantity);
-                _productRepository.Update(product);
-
-                var invoiceItem = InvoiceItem.Create(product, item.Quantity);
-
-                invoice.AddItem(invoiceItem);
+                if (product!.StockQuantity.Value < item.Quantity)
+                {
+                    errors.Add(new ApplicationError(ApplicationErrorCodes.ProductOutOfStock, item.ProductId.ToString()));
+                }
             }
 
-            if (!invoice.Items.Any())
-                return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.EmptyInvoiceItem, nameof(invoice)));
+            if (errors.Any())
+                return Result<Domain.Entities.Invoice>.Failure(errors);
+
+            var invoice = Domain.Entities.Invoice.Create(customer);
+
+            foreach (var item in groupedProducts)
+            {
+                var product = productsDictionary[item.ProductId];
+                product.DecreaseStock(item.Quantity);
+                var invoiceItem = InvoiceItem.Create(product, item.Quantity);
+                invoice.AddItem(invoiceItem);
+            }
 
             await _invoiceRepository.AddAsync(invoice);
             await _unitOfWork.SaveChangesAsync();
 
             return Result<Domain.Entities.Invoice>.Success(invoice);
-
         }
     }
 }
