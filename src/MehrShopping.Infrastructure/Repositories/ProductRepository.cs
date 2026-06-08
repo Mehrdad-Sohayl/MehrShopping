@@ -1,5 +1,7 @@
 ﻿using MehrShopping.Domain.Entities;
+using MehrShopping.Domain.Exceptions;
 using MehrShopping.Domain.Interfaces.Repositories;
+using MehrShopping.Domain.ValueObjects;
 using MehrShopping.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,11 +26,6 @@ namespace MehrShopping.Infrastructure.Repositories
             _context.Products.Remove(product);
         }
 
-        public Task<List<Product>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Product?> GetByIdAsync(int id)
         {
             return await _context.Products.FindAsync(id);
@@ -49,6 +46,17 @@ namespace MehrShopping.Infrastructure.Repositories
         public void Update(Product product)
         {
             _context.Products.Update(product);
+        }
+
+        public async Task<bool> DecreaseStockIfAvailable(int productId, int quantity, List<DomainError> errors)
+        {
+            var rows = await _context.Products
+                .Where(p => p.Id == productId && p.StockQuantity.Value >= quantity)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(p => p.StockQuantity,
+                        p => Quantity.Create(p.StockQuantity.Value - quantity, errors)));
+
+            return rows > 0;
         }
     }
 }
