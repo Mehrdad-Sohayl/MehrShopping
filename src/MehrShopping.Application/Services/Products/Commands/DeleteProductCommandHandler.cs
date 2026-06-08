@@ -5,12 +5,12 @@ using MehrShopping.Domain.Interfaces.Repositories;
 
 namespace MehrShopping.Application.Services.Products.Commands
 {
-    public class DeleteProductHandler
+    public class DeleteProductCommandHandler
     {
         private readonly IProductRepository _productRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteProductHandler(IProductRepository productRepository, IUnitOfWork unitOfWork)
+        public DeleteProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork)
         {
             _productRepository = productRepository;
             _unitOfWork = unitOfWork;
