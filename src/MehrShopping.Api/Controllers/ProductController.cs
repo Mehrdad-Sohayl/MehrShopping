@@ -9,15 +9,15 @@ namespace MehrShopping.Api.Controllers
     [Route("api/[Controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly RegisterProductHandler _registerProductHandler;
-        private readonly DeleteProductHandler _deleteProductHandler;
+        private readonly RegisterProductCommandHandler _registerProductCommandHandler;
+        private readonly DeleteProductCommandHandler _deleteProductCommandHandler;
 
         public ProductController(
-            RegisterProductHandler registerProductHandler,
-            DeleteProductHandler deleteProductHandler)
+            RegisterProductCommandHandler registerProductCommandHandler,
+            DeleteProductCommandHandler deleteProductCommandHandler)
         {
-            _registerProductHandler = registerProductHandler;
-            _deleteProductHandler = deleteProductHandler;
+            _registerProductCommandHandler = registerProductCommandHandler;
+            _deleteProductCommandHandler = deleteProductCommandHandler;
         }
 
         [HttpPost]
@@ -25,7 +25,7 @@ namespace MehrShopping.Api.Controllers
         {
             var command = new RegisterProductCommand(request.Name, request.Quantity);
 
-            var result = await _registerProductHandler.Handle(command);
+            var result = await _registerProductCommandHandler.Handle(command);
 
             if (result.IsSuccess)
                 return Ok(result);
@@ -41,7 +41,7 @@ namespace MehrShopping.Api.Controllers
         {
             var command = new DeleteProductCommand(request.Id);
 
-            var result = await _deleteProductHandler.Handle(command);
+            var result = await _deleteProductCommandHandler.Handle(command);
 
             if (result.IsSuccess)
                 return Ok(result);

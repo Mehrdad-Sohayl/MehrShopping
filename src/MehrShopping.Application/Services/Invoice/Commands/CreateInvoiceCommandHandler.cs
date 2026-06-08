@@ -5,14 +5,14 @@ using MehrShopping.Domain.Interfaces.Repositories;
 
 namespace MehrShopping.Application.Services.Invoice.Commands
 {
-    public class CreateInvoiceHandler
+    public class CreateInvoiceCommandHandler
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateInvoiceHandler(
+        public CreateInvoiceCommandHandler(
             ICustomerRepository customerRepository,
             IProductRepository productRepository,
             IInvoiceRepository invoiceRepository,
