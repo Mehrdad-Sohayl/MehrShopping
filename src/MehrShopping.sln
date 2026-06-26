@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11822.322
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MehrShopping.Application", "MehrShopping.Application\MehrShopping.Application.csproj", "{22F2A2BA-FC66-48C3-BF14-B71577A63CCD}"
 EndProject
@@ -12,6 +12,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MehrShopping.Api", "MehrShopping.Api\MehrShopping.Api.csproj", "{8D1EE81C-AD19-42C5-B0AC-E9AD146B024D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MehrShopping.Test", "MehrShopping.Test\MehrShopping.Test.csproj", "{01F94EB5-2C8B-4C3B-89F6-EA0E4619E5DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MehrShopping.Tests", "MehrShopping.Tests\MehrShopping.Tests.csproj", "{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +84,18 @@ Global
 		{01F94EB5-2C8B-4C3B-89F6-EA0E4619E5DC}.Release|x64.Build.0 = Release|Any CPU
 		{01F94EB5-2C8B-4C3B-89F6-EA0E4619E5DC}.Release|x86.ActiveCfg = Release|Any CPU
 		{01F94EB5-2C8B-4C3B-89F6-EA0E4619E5DC}.Release|x86.Build.0 = Release|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Debug|x64.Build.0 = Debug|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Debug|x86.Build.0 = Debug|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Release|x64.ActiveCfg = Release|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Release|x64.Build.0 = Release|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Release|x86.ActiveCfg = Release|Any CPU
+		{FD324DF4-CAA3-483E-BF32-36A3BEF78F0A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
