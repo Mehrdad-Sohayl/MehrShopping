@@ -18,6 +18,9 @@ namespace MehrShopping.Application.Services.Products.Commands
 
         public async Task<Result<Product>> Handle(DeleteProductCommand command)
         {
+            if (command is null) 
+                return Result<Product>.Failure(new ApplicationError(ApplicationErrorCodes.RequestValidation, nameof(command)));
+
             var product = await _productRepository.GetByIdAsync(command.Id);
             if (product == null)
                 return Result<Product>.Failure(new ApplicationError(ApplicationErrorCodes.ProductNotFound, nameof(product)));

@@ -16,9 +16,10 @@ namespace MehrShopping.Application.Services.Invoice.Queries
 
         public async Task<Result<List<InvoiceListDto>>> Handle(InvoiceListRequest request)
         {
-
-            if (request == null)
-                throw new ApplicationException(new ApplicationError(ApplicationErrorCodes.RequestValidation, nameof(InvoiceListRequest)));
+            if (request is null) 
+                return Result<List<InvoiceListDto>>.Failure(new ApplicationError(ApplicationErrorCodes.RequestValidation, nameof(request)));
+            if (request.Filters == null) 
+                return Result<List<InvoiceListDto>>.Failure(new ApplicationError(ApplicationErrorCodes.RequestValidation, nameof(request.Filters)));
 
             var result = await _invoiceReadRepository.GetInvoiceListAsync(request);
             return result;
