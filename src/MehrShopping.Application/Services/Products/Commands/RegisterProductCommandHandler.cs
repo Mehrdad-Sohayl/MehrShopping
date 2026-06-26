@@ -18,6 +18,9 @@ namespace MehrShopping.Application.Services.Products.Commands
 
         public async Task<Result<Product>> Handle(RegisterProductCommand command)
         {
+            if (command is null) 
+                return Result<Product>.Failure(new ApplicationError(ApplicationErrorCodes.RequestValidation, nameof(command)));
+
             var product = await _productRepository.GetByNameAsync(command.Name);
             if (product != null)
                 return Result<Product>.Failure(new ApplicationError(ApplicationErrorCodes.ProductAlreadyExists, nameof(product)));
