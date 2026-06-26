@@ -1,7 +1,9 @@
 ﻿using MehrShopping.Application.Common;
 using MehrShopping.Application.Interfaces;
 using MehrShopping.Domain.Entities;
+using MehrShopping.Domain.Exceptions;
 using MehrShopping.Domain.Interfaces.Repositories;
+using System.Text.RegularExpressions;
 
 namespace MehrShopping.Application.Services.Invoice.Commands
 {
@@ -28,6 +30,8 @@ namespace MehrShopping.Application.Services.Invoice.Commands
                 {
                     if (command is null) return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.RequestValidation, nameof(command)));
                     if (command.Items == null) return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.RequestValidation, nameof(command.Items)));
+        {
+            var errors = new List<DomainError>();
 
                     var errors = new List<ApplicationError>();
 
@@ -76,6 +80,34 @@ namespace MehrShopping.Application.Services.Invoice.Commands
                         var invoiceItem = InvoiceItem.Create(product, item.Quantity);
                         invoice.AddItem(invoiceItem);
                     }
+            var grouped = command.Items
+                .GroupBy(x => x.ProductId)
+                .Select(x => new
+                {
+                    x.Key,
+                    Qty = x.Sum(q => q.Quantity)
+                })
+                .ToList();
+
+            foreach (var item in grouped)
+            {
+                var success = await _productRepository
+                    .DecreaseStockIfAvailable(item.Key, item.Qty, errors);
+
+                if (!success)
+                {
+                    return Result<Domain.Entities.Invoice>.Failure(
+                        new ApplicationError("OutOfStock", item.Key.ToString()));
+                }
+            }
+
+            var invoice = Domain.Entities.Invoice.Create(customer);
+
+            foreach (var item in grouped)
+            {
+                var product = await _productRepository.GetByIdAsync(item.Key);
+                invoice.AddItem(InvoiceItem.Create(product!, item.Qty));
+            }
 
                     await _invoiceRepository.AddAsync(invoice);
                     await _unitOfWork.SaveChangesAsync();
