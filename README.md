@@ -1,362 +1,131 @@
 # 🛒 MehrShopping API
 
-A backend e-commerce API built with **.NET 6/7**, **Domain-Driven Design (DDD)**, **CQRS**, and **Entity Framework Core**.
+A backend e-commerce system built with **.NET 8**, **Domain-Driven Design (DDD)**, **CQRS**, and **Entity Framework Core** that manages customers, products, and invoices with integration to an external PersonalInfoService.
 
-The system manages customers, products, and invoices while integrating with an external **PersonalInfoService** for retrieving customer information.
+## ✨ Features
 
----
+### 👥 Customer Management
+- Register customers via external PersonalInfoService integration
+- Update customer information
+- Retrieve customer data
+- Validate customer existence
 
-# ✨ Features
+### 📦 Product Management
+- Register new products
+- Delete products
+- Manage product catalog
 
-## 👥 Customer Management
+### 🧾 Invoice Management
+- Create invoices with multiple items
+- Validate customer and product availability
+- Automatically decrease product stock
 
-* Register customers
-* Update customer information
-* Retrieve customer data
-* Integrate with PersonalInfoService
+### 🌐 External Service Integration
+- HTTP client integration with PersonalInfoService
+- Configurable endpoint and timeout settings
 
-## 📦 Product Management
+## 🏛️ Architecture
 
-* Register products
-* Delete products
-* Manage product catalog
-
-## 🧾 Invoice Management
-
-* Create invoices
-* Manage invoice items
-* Retrieve invoice lists
-
-## 🌐 External Service Integration
-
-* Communicate with PersonalInfoService through HTTP APIs
-* Configurable endpoint and timeout settings
-
----
-
-# 🏛️ Architecture
-
-The solution follows **Domain-Driven Design (DDD)** principles and is organized into separate layers.
+The system implements **Domain-Driven Design (DDD)** with a **layered architecture**:
 
 ```text
 ┌───────────────────┐
-│       API         │
-│ ASP.NET Core MVC  │
+│       API         │  ASP.NET Core MVC
 └─────────┬─────────┘
           │
           ▼
 ┌───────────────────┐
-│   Application     │
-│ Commands/Queries  │
-│     Handlers      │
+│   Application     │  CQRS pattern with dedicated handlers
 └─────────┬─────────┘
           │
           ▼
 ┌───────────────────┐
-│      Domain       │
-│ Business Rules    │
-│ Entities          │
-│ Value Objects     │
+│      Domain       │  Core business logic and entities
 └─────────┬─────────┘
           │
           ▼
 ┌───────────────────┐
-│ Infrastructure    │
-│ EF Core           │
-│ Repositories      │
-│ Unit Of Work      │
-│ HTTP Clients      │
+│ Infrastructure    │  Data access and external services
 └───────────────────┘
 ```
 
----
+## 📂 Project Structure
 
-# 📂 Project Structure
-
-```text
-src/
-├── MehrShopping.Api
-├── MehrShopping.Application
-├── MehrShopping.Domain
-└── MehrShopping.Infrastructure
+```
+MehrShopping/
+├── src/
+│   ├── MehrShopping.Api/               # ASP.NET Core Web API
+│   ├── MehrShopping.Application/       # CQRS handlers and application logic
+│   ├── MehrShopping.Domain/            # Domain entities, value objects, exceptions
+│   ├── MehrShopping.Infrastructure/    # Repositories, EF Core, external clients
+│   └── MehrShopping.sln               # Solution file
+├── PersonalInfoService/               # External service dependency
+└── README.md                          # This file
 ```
 
----
+## 🎯 Domain Layer
 
-# 🎯 Domain Layer
+### Key Domain Concepts
+- **Customer**: Contains personal information and national code
+- **Product**: Manages product details and stock
+- **Invoice**: Represents a purchase with multiple items
+- **Value Objects**: Includes `Name`, `NationalCode`, `Quantity`
 
-The Domain layer contains the core business model and business rules.
+### Business Rules
+- Customers must have a valid national code
+- Products cannot have negative stock quantity
+- Invoices require valid customer and product references
 
-### Responsibilities
+## ⚡ Application Layer
 
-* Domain entities
-* Value objects
-* Domain exceptions
-* Repository contracts
-* Domain services and business rules
-
-The domain layer remains independent from infrastructure concerns and external frameworks.
-
----
-
-# ⚡ Application Layer
-
-The Application layer implements the **CQRS** pattern.
+Uses **CQRS** pattern with direct handler invocation (no MediatR):
 
 ### Commands
-
-Commands represent operations that modify system state.
-
-Examples:
-
-* RegisterCustomer
-* UpdateCustomer
-* RegisterProduct
-* DeleteProduct
-* CreateInvoice
+- `RegisterCustomerCommand`
+- `UpdateCustomerCommand`
+- `RegisterProductCommand`
+- `DeleteProductCommand`
+- `CreateInvoiceCommand`
 
 ### Queries
+- `GetInvoiceListQuery`
+- `GetCustomerQuery`
+- `GetProductQuery`
 
-Queries are responsible for retrieving data without modifying state.
+## 🗄️ Infrastructure Layer
 
-Examples:
+### Data Access
+- **Entity Framework Core** with SQL Server
+- **Unit Of Work pattern** for transaction management
+- **Repository pattern** for data access
 
-* GetInvoiceList
-* GetCustomer
-* GetProduct
+### External Services
+- **PersonalInfoServiceClient**: HTTP client for customer data
 
-### Handlers
+## 🔌 API Endpoints
 
-Each command and query is processed by a dedicated handler.
+| Module    | Endpoint               | Method | Description                     |
+|-----------|------------------------|--------|---------------------------------|
+| Customer  | `/api/Customer`        | POST   | Register a new customer         |
+| Customer  | `/api/Customer`        | PUT    | Update customer information     |
+| Product   | `/api/Product`         | POST   | Register a new product          |
+| Product   | `/api/Product`         | DELETE | Delete a product                |
+| Invoice   | `/api/Invoice`         | POST   | Create a new invoice            |
+| Invoice   | `/api/Invoice`         | GET    | Get invoice list                |
 
-```text
-Controller
-    │
-    ▼
-Handler
-    │
-    ▼
-Repository / UnitOfWork
-```
+## 📖 API Documentation
 
-The project uses CQRS without MediatR, with handlers invoked directly by controllers.
+Swagger/OpenAPI documentation is available at `/swagger` when the application is running.
 
----
+## ⚙️ Configuration
 
-# 🗄️ Infrastructure Layer
-
-Infrastructure contains implementations of external dependencies.
-
-### Components
-
-* Entity Framework Core
-* SQL Server
-* Repository implementations
-* Unit Of Work implementation
-* EF Core Migrations
-* PersonalInfoService client
-
-### Persistence
-
-Data access is managed through repositories and coordinated using the Unit Of Work pattern.
-
-```text
-Controller
-    │
-    ▼
-Handler
-    │
-    ▼
-UnitOfWork
-    │
-    ├── CustomerRepository
-    ├── ProductRepository
-    └── InvoiceRepository
-```
-
----
-
-# 🌐 PersonalInfoService Integration
-
-MehrShopping integrates with an external PersonalInfoService.
-
-### Communication
-
-```text
-MehrShopping API
-       │
-       ▼
-HttpClient
-       │
-       ▼
-PersonalInfoService
-```
-
-The service endpoint and timeout values are configured through application settings.
-
----
-
-# 🔌 API Endpoints
-
-## Customer
-
-| Method | Endpoint        |
-| ------ | --------------- |
-| POST   | `/api/Customer` |
-| PUT    | `/api/Customer` |
-
-## Product
-
-| Method | Endpoint       |
-| ------ | -------------- |
-| POST   | `/api/Product` |
-| DELETE | `/api/Product` |
-
-## Invoice
-
-| Method | Endpoint       |
-| ------ | -------------- |
-| POST   | `/api/Invoice` |
-| GET    | `/api/Invoice` |
-
----
-
-# 📖 API Documentation
-
-Swagger/OpenAPI is enabled for API exploration and testing.
-
-After running the application:
-
-```text
-/swagger
-```
-
-provides interactive API documentation.
-
----
-
-# 👤 Customer Registration Workflow (Detailed Sequence)
-
-```mermaid
-sequenceDiagram
-    actor Client
-    participant CustomerController
-    participant RegisterCustomerCommandHandler
-    participant ICustomerRepository
-    participant IPersonalInfoClient
-    participant IUnitOfWork
-    participant Customer as Domain.Entities.Customer
-
-    Client->>CustomerController: RegisterCustomerRequest
-    CustomerController->>CustomerController: Create RegisterCustomerCommand
-    CustomerController->>RegisterCustomerCommandHandler: Handle(command)
-
-    RegisterCustomerCommandHandler->>ICustomerRepository: FindByNationalCodeAsync(nationalCode)
-    ICustomerRepository-->>RegisterCustomerCommandHandler: Existing customer / null
-
-    alt Customer already exists
-        RegisterCustomerCommandHandler-->>CustomerController: Failure(CustomerAlreadyExists)
-        CustomerController-->>Client: HTTP 400 Bad Request
-    else Customer does not exist
-        RegisterCustomerCommandHandler->>IPersonalInfoClient: GetAsync(nationalCode)
-        IPersonalInfoClient-->>RegisterCustomerCommandHandler: PersonalInfo / null
-
-        alt Personal info not found
-            RegisterCustomerCommandHandler-->>CustomerController: Failure(PersonalInfoNotFound)
-            CustomerController-->>Client: HTTP 400 Bad Request
-        else Personal info found
-            RegisterCustomerCommandHandler->>Customer: Create Customer(firstName, lastName, nationalCode)
-            Customer-->>RegisterCustomerCommandHandler: New Customer
-
-            RegisterCustomerCommandHandler->>ICustomerRepository: AddAsync(customer)
-            ICustomerRepository-->>RegisterCustomerCommandHandler: Customer added
-
-            RegisterCustomerCommandHandler->>IUnitOfWork: SaveChangesAsync()
-            IUnitOfWork-->>RegisterCustomerCommandHandler: Changes saved
-
-            RegisterCustomerCommandHandler-->>CustomerController: Success(customer)
-
-            alt result.IsSuccess == true
-                CustomerController-->>Client: HTTP 200 OK + Result
-            else Result contains errors
-                CustomerController-->>Client: HTTP 400 Bad Request + First Error
-            else Generic failure
-                CustomerController-->>Client: HTTP 400 Bad Request
-            end
-        end
-    end
-```
-
-# ⚙️ Invoice Creation Workflow (Detailed Sequence)
-
-```mermaid
-sequenceDiagram
-    actor Client
-    participant InvoiceController
-    participant CreateInvoiceCommandHandler
-    participant CustomerRepository
-    participant ProductRepository
-    participant InvoiceRepository
-    participant UnitOfWork
-
-    Client->>InvoiceController: POST /api/invoice
-
-    InvoiceController->>CreateInvoiceCommandHandler: Handle(command)
-
-    %% Validate customer
-    CreateInvoiceCommandHandler->>CustomerRepository: GetByIdAsync(customerId)
-    CustomerRepository-->>CreateInvoiceCommandHandler: customer
-
-    alt customer not found
-        CreateInvoiceCommandHandler-->>InvoiceController: Failure(CustomerNotFound)
-        InvoiceController-->>Client: 400 Bad Request
-    else customer exists
-
-        %% Validate products
-        loop each item
-            CreateInvoiceCommandHandler->>ProductRepository: GetByIdAsync(productId)
-            ProductRepository-->>CreateInvoiceCommandHandler: product
-
-            alt product not found
-                CreateInvoiceCommandHandler-->>InvoiceController: Failure(ProductNotFound)
-                InvoiceController-->>Client: 400 Bad Request
-            end
-        end
-
-        %% Domain operation
-        CreateInvoiceCommandHandler->>CreateInvoiceCommandHandler: Create Invoice Aggregate
-
-        loop each item
-            CreateInvoiceCommandHandler->>ProductRepository: DecreaseStock(item.quantity)
-        end
-
-        %% Persistence (single transaction)
-        CreateInvoiceCommandHandler->>InvoiceRepository: AddAsync(invoice)
-        CreateInvoiceCommandHandler->>UnitOfWork: SaveChangesAsync()
-
-        CreateInvoiceCommandHandler-->>InvoiceController: Success(invoice)
-        InvoiceController-->>Client: 200 OK
-    end
-```
-
-# ⚙️ Configuration
-
-Configuration is managed through `appsettings.json`.
-
-## Database
+Configuration is managed through `appsettings.json`:
 
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=...;"
-  }
-}
-```
-
-## PersonalInfoService
-
-```json
-{
+    "DefaultConnection": "Server=localhost;Database=MehrShopping;Trusted_Connection=True;MultipleActiveResultSets=true"
+  },
   "PersonalInfoClient": {
     "BaseAddress": "https://localhost:7120/",
     "Timeout": 10
@@ -364,76 +133,63 @@ Configuration is managed through `appsettings.json`.
 }
 ```
 
----
+## 🛠️ Build & Run
 
-# 🛠️ Build & Run
+### Prerequisites
+- .NET 8 SDK
+- SQL Server (for database)
 
-## Restore Packages
+### Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Mehrdad-Sohayl/MehrShopping.git
+   cd MehrShopping
+   ```
+
+2. **Restore packages**
+   ```bash
+   dotnet restore
+   ```
+
+3. **Apply database migrations**
+   ```bash
+   cd src/MehrShopping.Api
+   dotnet ef database update
+   ```
+
+4. **Run the application**
+   ```bash
+   cd src/MehrShopping.Api
+   dotnet run
+   ```
+
+The application will be available at `https://localhost:7120` (or configured port).
+
+## 🧪 Testing
+
+Unit tests are available in the `MehrShopping.Test` project. Run tests with:
 
 ```bash
-dotnet restore
+cd src/MehrShopping.Test
+dotnet test
 ```
 
-## Build
+## 🚀 Technology Stack
 
-```bash
-dotnet build
-```
+| Category         | Technology            |
+|------------------|-----------------------|
+| Platform         | .NET 8                |
+| Web Framework    | ASP.NET Core MVC      |
+| Database         | SQL Server            |
+| ORM              | Entity Framework Core |
+| Architecture     | DDD, CQRS             |
+| API Documentation| Swagger/OpenAPI       |
 
-## Apply Migrations
-
-```bash
-dotnet ef database update
-```
-
-## Run Application
-
-```bash
-dotnet run
-```
-
----
-
-# 🧪 Testing
-
-The solution supports automated testing for validating business rules and application behavior.
-
-Typical test coverage includes:
-
-* Domain logic
-* Application handlers
-* Repository behavior
-* API endpoints
-
----
-
-# 🚀 Technology Stack
-
-| Technology            | Purpose                        |
-| --------------------- | ------------------------------ |
-| .NET 8                | Application Platform           |
-| ASP.NET Core MVC      | REST API                       |
-| Entity Framework Core | Data Access                    |
-| SQL Server            | Database                       |
-| Swagger / OpenAPI     | API Documentation              |
-| HttpClient            | External Service Communication |
-| CQRS                  | Application Architecture       |
-| DDD                   | Domain Modeling                |
-| Unit Of Work          | Transaction Management         |
-
----
-
-# 📌 Notes
-
-* Built using Domain-Driven Design (DDD).
-* Implements CQRS using dedicated command and query handlers.
-* Uses Repository and Unit Of Work patterns.
-* Integrates with an external PersonalInfoService through HttpClient.
-* Supports SQL Server through Entity Framework Core.
-* Includes Swagger documentation for API exploration.
-
----
-
-# 📄 License
+## 📄 License
 
 MIT License
+
+## 📧 Contact
+
+For issues and contributions, please use the GitHub issue tracker.
