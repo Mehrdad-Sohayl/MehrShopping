@@ -33,8 +33,46 @@ namespace MehrShopping.Application.Services.Invoice.Commands
         {
             var errors = new List<DomainError>();
 
+            var customer = await _customerRepository.GetByIdAsync(command.CustomerId);
+            if (customer == null)
+                return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.CustomerNotFound, nameof(customer)));
+
                     var errors = new List<ApplicationError>();
 
+            var grouped = command.Items
+                .GroupBy(x => x.ProductId)
+                .Select(x => new
+                {
+                    x.Key,
+                    Qty = x.Sum(q => q.Quantity)
+                })
+                .ToList();
+
+            foreach (var item in grouped)
+            {
+                var success = await _productRepository
+                    .DecreaseStockIfAvailable(item.Key, item.Qty, errors);
+
+                if (!success)
+                {
+                    return Result<Domain.Entities.Invoice>.Failure(
+                        new ApplicationError("OutOfStock", item.Key.ToString()));
+                }
+            }
+
+            var invoice = Domain.Entities.Invoice.Create(customer);
+
+            foreach (var item in grouped)
+            {
+                var product = await _productRepository.GetByIdAsync(item.Key);
+                invoice.AddItem(InvoiceItem.Create(product!, item.Qty));
+            }
+
+            await _invoiceRepository.AddAsync(invoice);
+            await _unitOfWork.SaveChangesAsync();
+
+            return Result<Domain.Entities.Invoice>.Success(invoice);
+        }
                     var customer = await _customerRepository.GetByIdAsync(command.CustomerId);
                     if (customer == null)
                         return Result<Domain.Entities.Invoice>.Failure(new ApplicationError(ApplicationErrorCodes.CustomerNotFound, nameof(customer)));
