@@ -4,6 +4,7 @@ using MehrShopping.Domain.Entities;
 using System.Collections.Generic;
 using MehrShopping.Domain.Exceptions;
 using MehrShopping.Domain.Errors;
+using MehrShopping.Domain.ValueObjects;
 
 namespace MehrShopping.Tests.Domain
 {
@@ -21,7 +22,7 @@ namespace MehrShopping.Tests.Domain
             // Act & Assert
             Action act = () => new Invoice(null);
             act.Should().Throw<DomainException>().Which.Errors.Should().ContainSingle(e => 
-                e.Code == DomainErrorCodes.InvalidCustomer && e.Message == nameof(Customer));
+                e.Code == DomainErrorCodes.InvalidCustomer && e.Message == "customer");
         }
 
         [Fact]
@@ -62,7 +63,7 @@ namespace MehrShopping.Tests.Domain
             // Act & Assert
             Action act = () => invoice.AddItem(null);
             act.Should().Throw<DomainException>().Which.Errors.Should().ContainSingle(e =>
-                e.Code == DomainErrorCodes.InvalidItem && e.Message == nameof(InvoiceItem));
+                e.Code == DomainErrorCodes.InvalidItem && e.Message == "item");
         }
 
         [Fact]
@@ -131,8 +132,9 @@ namespace MehrShopping.Tests.Domain
 
             // Assert
             invoice.Items.Should().HaveCount(2);
-            invoice.Items[0].Should().BeSameAs(item1);
-            invoice.Items[1].Should().BeSameAs(item2);
+            var items = invoice.Items.ToList();
+            items[0].Should().BeSameAs(item1);
+            items[1].Should().BeSameAs(item2);
         }
     }
 }

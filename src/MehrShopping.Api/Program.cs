@@ -1,4 +1,5 @@
 using MehrShopping.Application.Interfaces;
+using MehrShopping.Api.Middlewares;
 using MehrShopping.Application.Services.Customer.Commands.RegisterCustomer;
 using MehrShopping.Application.Services.Invoice.Commands;
 using MehrShopping.Application.Services.Invoice.Queries;
@@ -52,6 +53,8 @@ namespace MehrShopping.Api
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 

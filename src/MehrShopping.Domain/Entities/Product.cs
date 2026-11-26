@@ -38,6 +38,9 @@ namespace MehrShopping.Domain.Entities
 
         public void DecreaseStock(int quantity)
         {
+            if (quantity < 0)
+                throw new DomainException(new DomainError(DomainErrorCodes.InvalidQuantity, nameof(quantity)));
+
             if (StockQuantity.Value < quantity)
                 throw new DomainException(new DomainError(DomainErrorCodes.ProductOutOfStock, nameof(DecreaseStock)));
 

@@ -1,4 +1,6 @@
 using FluentAssertions;
+using MehrShopping.Domain.Entities;
+using MehrShopping.Domain.Exceptions;
 using Xunit;
 
 namespace MehrShopping.Tests.Domain.Entities
@@ -6,24 +8,50 @@ namespace MehrShopping.Tests.Domain.Entities
     public class InvoiceItemTests
     {
         [Fact]
-        public void Should_Create_Invoice_Item_With_Valid_Data()
+        public void Create_WithValidData_ShouldCreateItem()
         {
             // Arrange
-            var item = new InvoiceItem(product: null!, quantity: 2, price: 199.99m);
+            var product = Product.Create("Laptop", 10);
+
+            // Act
+            var item = InvoiceItem.Create(product, 3);
 
             // Assert
-            item.Quantity.Should().Be(2);
-            item.Price.Should().Be(199.99m);
+            item.Should().NotBeNull();
+            item.Product.Should().BeSameAs(product);
+            item.Quantity.Value.Should().Be(3);
         }
 
         [Fact]
-        public void Should_Throw_Exception_For_Null_Product()
+        public void Create_WithNullProduct_ShouldThrowDomainException()
         {
+            // Act & Assert
+            Action act = () => InvoiceItem.Create(null!, 3);
+            act.Should().Throw<DomainException>();
+        }
+
+        [Fact]
+        public void Create_WithNegativeQuantity_ShouldThrowDomainException()
+        {
+            // Arrange
+            var product = Product.Create("Laptop", 10);
+
+            // Act & Assert
+            Action act = () => InvoiceItem.Create(product, -1);
+            act.Should().Throw<DomainException>();
+        }
+
+        [Fact]
+        public void Create_WithZeroQuantity_ShouldSucceed()
+        {
+            // Arrange
+            var product = Product.Create("Laptop", 10);
+
             // Act
-            Action act = () => new InvoiceItem(product: null!, quantity: 2, price: 199.99m);
+            var item = InvoiceItem.Create(product, 0);
 
             // Assert
-            act.Should().Throw<DomainException>().WithMessage("Product cannot be null");
+            item.Quantity.Value.Should().Be(0);
         }
     }
 }

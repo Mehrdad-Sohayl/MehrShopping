@@ -48,11 +48,14 @@ namespace MehrShopping.Tests.Domain
         }
 
         [Fact]
-        public void Create_WithZeroQuantity_ShouldThrowDomainException()
+        public void Create_WithZeroQuantity_ShouldCreateProductWithZeroStock()
         {
-            // Act & Assert
-            Action act = () => Product.Create("Test", 0);
-            act.Should().Throw<DomainException>();
+            // Act
+            var product = Product.Create("Test", 0);
+
+            // Assert
+            product.Should().NotBeNull();
+            product.StockQuantity.Value.Should().Be(0);
         }
 
         [Fact]

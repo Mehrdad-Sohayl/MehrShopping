@@ -40,13 +40,21 @@ namespace MehrShopping.Domain.Entities
             if (item == null)
                 throw new DomainException(new DomainError(DomainErrorCodes.InvalidItem, nameof(item)));
 
-            if (_items.Any(i => i.Product.Id == item.Product.Id))
+            if (_items.Any(i => IsSameProduct(i.Product, item.Product)))
                 throw new DomainException(new DomainError(DomainErrorCodes.DuplicateInvoiceItem, nameof(Product)));
 
             if (item.Quantity.Value <= 0)
                 throw new DomainException(new DomainError(DomainErrorCodes.InvalidQuantity, nameof(Quantity)));
 
             _items.Add(item);
+        }
+
+        private static bool IsSameProduct(Product current, Product incoming)
+        {
+            if (current.Id != 0 && incoming.Id != 0)
+                return current.Id == incoming.Id;
+
+            return ReferenceEquals(current, incoming);
         }
 
         #region EF
