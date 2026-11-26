@@ -149,6 +149,36 @@ export ConnectionStrings__DefaultConnection="Server=...;Database=...;User Id=...
 
 > ⚠️ **Never commit real credentials.** If a secret is ever committed by mistake, rotate it immediately (a new password on the SQL Server). Removing the value from the file does **not** erase it from git history — the password itself must be changed.
 
+## 🔐 Secret Scanning (pre-commit hook)
+
+This repository includes a **pre-commit hook powered by [gitleaks](https://gitleaks.io)** that automatically scans staged changes for secrets (API keys, passwords, tokens, connection strings, private keys, etc.) before every commit.
+
+### How it works
+- On `git commit`, the hook runs `gitleaks protect --staged` against the staged changes.
+- If a potential secret is detected, the commit is **blocked** with details.
+- Built-in rules cover 100+ secret types (AWS, GitHub, Azure, Slack, private keys, etc.).
+- A custom rule (`db-connection-password`) catches hardcoded database credentials in connection strings.
+
+### Setup (one-time per clone)
+```bash
+# 1. Install gitleaks
+# Windows (Scoop):
+scoop install gitleaks
+# Windows (Chocolatey):
+choco install gitleaks
+# macOS:
+brew install gitleaks
+# Linux / manual: https://github.com/gitleaks/gitleaks#installation
+
+# 2. Enable the hook (points to .githooks/ directory in this repo)
+git config core.hooksPath .githooks
+```
+
+> **Note:** If `gitleaks` is not on your PATH, the hook will warn but **not block** the commit — install it to activate protection.
+
+### False positives
+If a legitimate value is flagged, add an allowlist entry to `.gitleaks.toml` under the appropriate rule (see [gitleaks allowlist docs](https://github.com/gitleaks/gitleaks#allowlisting)).
+
 ## 🛠️ Build & Run
 
 ### Prerequisites
