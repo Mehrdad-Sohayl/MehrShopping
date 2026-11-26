@@ -47,3 +47,6 @@ TestResults/
 # Local settings
 local.settings.json
 ./Properties/launchSettings.json
+
+# Per-machine configuration (may contain secrets - never commit real credentials)
+appsettings.*.local.json

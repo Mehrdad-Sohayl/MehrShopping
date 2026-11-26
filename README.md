@@ -119,19 +119,35 @@ Swagger/OpenAPI documentation is available at `/swagger` when the application is
 
 ## ⚙️ Configuration
 
-Configuration is managed through `appsettings.json`:
+`appsettings.json` holds only **non-sensitive** settings. Database credentials are deliberately **not committed** — supply them per environment:
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=MehrShopping;Trusted_Connection=True;MultipleActiveResultSets=true"
-  },
-  "PersonalInfoClient": {
-    "BaseAddress": "https://localhost:7120/",
-    "Timeout": 10
-  }
-}
+### Local development (User Secrets)
+
+```bash
+# MehrShopping.Api
+cd src/MehrShopping.Api
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=MehrShoppingDb;User Id=sa;Password=<your-password>;Encrypt=False;"
+
+# PersonalInfo.Api
+cd PersonalInfoService/PersonalInfo.Api
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=PersonalInfoDb;User Id=sa;Password=<your-password>;Encrypt=False;"
 ```
+
+User secrets are stored locally (`%LOCALAPPDATA%\Microsoft\UserSecrets` on Windows) and are only read in the `Development` environment.
+
+### Deployment (environment variables or a secrets manager)
+
+```powershell
+# PowerShell (Windows)
+$env:ConnectionStrings__DefaultConnection = "Server=...;Database=...;User Id=...;Password=...;Encrypt=True;"
+```
+
+```bash
+# bash (Linux/macOS)
+export ConnectionStrings__DefaultConnection="Server=...;Database=...;User Id=...;Password=...;Encrypt=True;"
+```
+
+> ⚠️ **Never commit real credentials.** If a secret is ever committed by mistake, rotate it immediately (a new password on the SQL Server). Removing the value from the file does **not** erase it from git history — the password itself must be changed.
 
 ## 🛠️ Build & Run
 
@@ -152,13 +168,20 @@ Configuration is managed through `appsettings.json`:
    dotnet restore
    ```
 
-3. **Apply database migrations**
+3. **Configure the database connection string**
+   ```bash
+   cd src/MehrShopping.Api
+   dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=MehrShoppingDb;User Id=sa;Password=<your-password>;Encrypt=False;"
+   ```
+   Configure `PersonalInfo.Api` the same way (see the [Configuration](#-configuration) section).
+
+4. **Apply database migrations**
    ```bash
    cd src/MehrShopping.Api
    dotnet ef database update
    ```
 
-4. **Run the application**
+5. **Run the application**
    ```bash
    cd src/MehrShopping.Api
    dotnet run
