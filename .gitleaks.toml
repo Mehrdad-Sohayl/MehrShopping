@@ -1,0 +1,15 @@
+# Gitleaks configuration for MehrShopping
+# Scans staged changes before every commit.
+# Built-in rules (cloud tokens, private keys, etc.) are included via `extend`.
+
+[extend]
+useDefaultConfig = true
+
+# Block hardcoded database credentials in connection strings
+# (SQL Server / generic: Password=..., Pwd=..., User Id=..., etc.)
+[[rules]]
+id = "db-connection-password"
+description = "Plaintext password in a database connection string"
+regex = '''(?i)(?:password|pwd)\s*[:=]\s*["']?([A-Za-z0-9!@#$%^&*()_+\-=?.;]{8,64})'''
+secretGroup = 1
+tags = ["credential", "database"]

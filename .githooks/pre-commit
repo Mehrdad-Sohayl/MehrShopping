@@ -1,0 +1,38 @@
+#!/bin/sh
+# Pre-commit hook: block commits that contain secrets (powered by gitleaks).
+# This hook runs gitleaks on staged changes only.
+
+# Find gitleaks on PATH
+GITLEAKS="$(command -v gitleaks 2>/dev/null)"
+
+if [ -z "$GITLEAKS" ]; then
+  echo ""
+  echo "⚠  gitleaks not found on PATH — secret scan skipped."
+  echo "   To enable secret scanning, install gitleaks:"
+  echo "     Windows:  scoop install gitleaks    (or: choco install gitleaks)"
+  echo "     macOS:    brew install gitleaks"
+  echo "     Linux:    https://github.com/gitleaks/gitleaks#installation"
+  echo "     Docs:     https://gitleaks.io"
+  echo "   Or download the binary to %LOCALAPPDATA%\\Programs\\gitleaks\\gitleaks.exe"
+  echo "   and add it to your user PATH."
+  echo ""
+  # Don't block the commit if gitleaks is missing — just warn.
+  exit 0
+fi
+
+# Run gitleaks on staged changes
+# --staged: scan staged changes (git diff --cached)
+# -c: config file
+# --no-banner: suppress banner
+# --verbose: show findings
+if ! "$GITLEAKS" protect --staged -c ".gitleaks.toml" --no-banner --verbose 2>&1; then
+  echo ""
+  echo "❌  Commit blocked: gitleaks found potential secrets in the staged changes."
+  echo "   Review the findings above."
+  echo "   If this is a false positive, add an allowlist entry to .gitleaks.toml and re-stage."
+  echo ""
+  exit 1
+fi
+
+echo "✅  gitleaks: no secrets detected in staged changes."
+exit 0
